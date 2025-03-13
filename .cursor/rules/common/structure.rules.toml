@@ -1,0 +1,48 @@
+[meta]
+version = "1.0.0"
+description = "Project structure configuration"
+
+[directory_structure]
+frontend = {
+    src = [
+        "assets/",
+        "components/",
+        "composables/",
+        "layouts/",
+        "pages/",
+        "router/",
+        "store/",
+        "styles/",
+        "types/",
+        "utils/"
+    ],
+    required_files = [
+        "index.html",
+        "vite.config.ts",
+        "tsconfig.json"
+    ]
+}
+
+backend = {
+    app = [
+        "api/",
+        "core/",
+        "models/",
+        "schemas/",
+        "services/",
+        "utils/"
+    ],
+    required_files = [
+        "main.py",
+        "requirements.txt",
+        "pytest.ini"
+    ]
+}
+
+[naming_conventions]
+directories = "lowercase"
+files = {
+    vue = "PascalCase",
+    ts = "camelCase",
+    py = "snake_case"
+} 

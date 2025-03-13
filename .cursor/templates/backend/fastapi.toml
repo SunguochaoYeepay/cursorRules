@@ -1,0 +1,78 @@
+[meta]
+version = "1.0.0"
+description = "FastAPI templates"
+type = "api"
+
+[templates.router]
+description = "FastAPI router template"
+content = '''
+from fastapi import APIRouter, Depends, HTTPException
+from typing import List
+from ..schemas.${1:model} import ${2:Model}Schema
+from ..services.${1:model} import ${2:Model}Service
+
+router = APIRouter(prefix="/${3:endpoint}", tags=["${4:tag}"])
+
+@router.get("/", response_model=List[${2:Model}Schema])
+async def get_all(
+    service: ${2:Model}Service = Depends()
+) -> List[${2:Model}Schema]:
+    """
+    Get all ${4:tag}
+    """
+    return await service.get_all()
+
+@router.post("/", response_model=${2:Model}Schema)
+async def create(
+    data: ${2:Model}Schema,
+    service: ${2:Model}Service = Depends()
+) -> ${2:Model}Schema:
+    """
+    Create new ${4:tag}
+    """
+    return await service.create(data)
+'''
+
+[templates.service]
+description = "Service layer template"
+content = '''
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import List, Optional
+from ..database import get_session
+from ..models.${1:model} import ${2:Model}
+from ..schemas.${1:model} import ${2:Model}Schema
+
+class ${2:Model}Service:
+    def __init__(self, session: AsyncSession = Depends(get_session)):
+        self.session = session
+
+    async def get_all(self) -> List[${2:Model}]:
+        """Get all ${2:Model}s"""
+        query = select(${2:Model})
+        result = await self.session.execute(query)
+        return result.scalars().all()
+
+    async def create(self, data: ${2:Model}Schema) -> ${2:Model}:
+        """Create new ${2:Model}"""
+        db_obj = ${2:Model}(**data.dict())
+        self.session.add(db_obj)
+        await self.session.commit()
+        await self.session.refresh(db_obj)
+        return db_obj
+'''
+
+[templates.model]
+description = "SQLAlchemy model template"
+content = '''
+from sqlalchemy import Column, Integer, String, DateTime
+from datetime import datetime
+from ..database import Base
+
+class ${1:Model}(Base):
+    __tablename__ = "${2:tablename}"
+
+    id = Column(Integer, primary_key=True, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+''' 

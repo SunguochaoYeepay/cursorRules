@@ -1,0 +1,27 @@
+[meta]
+version = "1.0.0"
+description = "Code style configuration"
+
+[code_style]
+indent_size = 4
+indent_style = "space"
+max_line_length = 100
+quote_style = "single"
+semi = false
+trailing_comma = "es5"
+
+[naming_conventions]
+components = "PascalCase"
+composables = "use[PascalCase]"
+types = "[PascalCase].types.ts"
+variables = "camelCase"
+constants = "UPPER_SNAKE_CASE"
+
+[formatting]
+vue_indent_script_and_style = true
+vue_single_file_component_order = ["script", "template", "style"]
+
+[git]
+commit_message_pattern = "^(feat|fix|docs|style|refactor|test|chore): .*"
+branch_name_pattern = "^(feature|bugfix|hotfix|release)/.*"
+protected_branches = ["main", "develop"] 

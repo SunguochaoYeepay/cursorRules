@@ -1,0 +1,74 @@
+[meta]
+version = "1.0.0"
+description = "Vue component templates"
+type = "component"
+
+[templates.basic]
+description = "Basic Vue component"
+content = '''
+<template>
+  <div :class="$style.container">
+    <!-- ${1:content} -->
+  </div>
+</template>
+
+<script setup lang="ts">
+defineProps<{
+  // ${2:props}
+}>()
+</script>
+
+<style module>
+.container {
+  /* ${3:styles} */
+}
+</style>
+'''
+
+[templates.with_composable]
+description = "Vue component with composable"
+content = '''
+<template>
+  <div :class="$style.container">
+    <!-- ${1:content} -->
+  </div>
+</template>
+
+<script setup lang="ts">
+import { use${2:Feature} } from '@/composables/use${2:Feature}'
+
+const props = defineProps<{
+  // ${3:props}
+}>()
+
+const { ${4:state}, ${5:methods} } = use${2:Feature}(props)
+</script>
+
+<style module>
+.container {
+  /* ${6:styles} */
+}
+</style>
+'''
+
+[templates.with_store]
+description = "Vue component with store integration"
+content = '''
+<template>
+  <div :class="$style.container">
+    <!-- ${1:content} -->
+  </div>
+</template>
+
+<script setup lang="ts">
+import { use${2:Store}Store } from '@/stores/${3:storePath}'
+
+const store = use${2:Store}Store()
+</script>
+
+<style module>
+.container {
+  /* ${4:styles} */
+}
+</style>
+''' 

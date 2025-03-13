@@ -1,0 +1,96 @@
+[meta]
+version = "1.0.0"
+description = "Documentation templates"
+type = "docs"
+
+[templates.readme]
+description = "Project README template"
+content = '''
+# ${1:Project Name}
+
+## Description
+${2:Project description}
+
+## Features
+- ${3:Feature 1}
+- ${4:Feature 2}
+- ${5:Feature 3}
+
+## Installation
+\```bash
+# Install dependencies
+${6:installation_command}
+\```
+
+## Usage
+\```bash
+# Development
+${7:dev_command}
+
+# Production
+${8:prod_command}
+\```
+
+## Configuration
+${9:configuration_instructions}
+
+## Contributing
+${10:contribution_guidelines}
+
+## License
+${11:license_type}
+'''
+
+[templates.api_docs]
+description = "API documentation template"
+content = '''
+# ${1:API Name}
+
+## Overview
+${2:API description}
+
+## Authentication
+${3:auth_instructions}
+
+## Endpoints
+
+### ${4:endpoint_name}
+\`${5:HTTP_METHOD} ${6:path}\`
+
+**Request**
+\```json
+${7:request_body}
+\```
+
+**Response**
+\```json
+${8:response_body}
+\```
+
+## Error Handling
+${9:error_handling_docs}
+'''
+
+[templates.component_docs]
+description = "Component documentation template"
+content = '''
+# ${1:Component Name}
+
+## Overview
+${2:component_description}
+
+## Props
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| ${3:prop_name} | ${4:type} | ${5:required} | ${6:default} | ${7:description} |
+
+## Events
+| Name | Parameters | Description |
+|------|------------|-------------|
+| ${8:event_name} | ${9:parameters} | ${10:description} |
+
+## Usage Example
+\```vue
+${11:example_code}
+\```
+''' 

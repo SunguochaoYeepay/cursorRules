@@ -1,0 +1,152 @@
+# Vue.js 项目规则配置
+# 该文件定义了 Vue.js 项目的开发规范和依赖管理
+# 最后更新: 2024-03-21
+
+[meta]
+version = "1.0.0"
+description = "Vue.js project configuration"
+last_updated = "2024-03-21"
+
+# 技术栈定义
+[tech_stack]
+frameworks = ["vue"]  # 核心框架
+libraries = [
+    "pinia",          # 状态管理
+    "vue-router",     # 路由管理
+    "ant-design-vue", # UI组件库
+    "@vueuse/core"    # 组合式API工具集
+]
+build_tools = ["vite"]                    # 构建工具
+testing_framework = ["vitest", "cypress"]  # 测试框架
+package_manager = "pnpm"                  # 包管理器
+
+# 项目依赖配置
+[dependencies]
+vue = "^3.3.0"                # Vue核心
+pinia = "^2.1.0"             # 状态管理
+vue-router = "^4.2.0"        # 路由
+ant-design-vue = "^4.0.0"    # Ant Design Vue
+@vueuse/core = "^10.0.0"     # 工具集
+dayjs = "^1.11.0"            # 日期处理（Ant Design Vue 依赖）
+@ant-design/icons-vue = "^7.0.0" # Ant Design 图标
+
+# 开发依赖配置
+[dev_dependencies]
+vitest = "^0.34.0"         # 单元测试
+@vue/test-utils = "^2.4.0" # 测试工具
+cypress = "^13.0.0"        # E2E测试
+typescript = "^5.0.0"      # TypeScript
+eslint = "^8.0.0"         # 代码检查
+prettier = "^2.0.0"        # 代码格式化
+less = "^4.0.0"           # Less支持（Ant Design Vue 使用）
+unplugin-vue-components = "^0.25.0" # 组件自动导入
+unplugin-auto-import = "^0.16.0"    # API自动导入
+@vitejs/plugin-vue = "^5.0.0"      # Vue插件
+
+# 环境配置
+[env]
+development = {
+    api_base_url = "http://localhost:3000",
+    assets_path = "/assets/",
+    enable_mock = true,
+    enable_devtools = true
+}
+production = {
+    api_base_url = "/api",
+    assets_path = "/static/",
+    enable_mock = false,
+    enable_devtools = false,
+    drop_console = true
+}
+test = {
+    api_base_url = "http://localhost:3000",
+    enable_mock = true,
+    coverage_threshold = 80
+}
+
+# 文件关联配置
+[file_relations]
+priority = 1  # 优先级设置
+patterns = {
+    # 组件关联文件
+    "src/components/*.vue" = [
+        "src/styles/{name}.less",         # Less样式文件
+        "src/composables/use{name}.ts"    # 组合式函数
+    ],
+    # 页面关联文件
+    "src/pages/*.vue" = [
+        "src/router/routes/{name}.ts"     # 路由配置
+    ]
+}
+
+# 构建配置
+[build]
+target = "es2020"           # 目标环境
+module = "esnext"           # 模块类型
+css_preprocessor = "less"   # CSS预处理器（Ant Design Vue 使用Less）
+assets_handling = {
+    images = "assets/images", # 图片资源路径
+    fonts = "assets/fonts",   # 字体资源路径
+    icons = "assets/icons"    # 图标资源路径
+}
+css_modules = true          # 启用CSS Modules
+ant_design = {
+    theme = "variable",     # 使用CSS变量主题
+    compact = false,        # 紧凑模式
+    dark_mode = true       # 暗色主题支持
+}
+
+# 开发服务器配置
+[dev_server]
+port = 8080                # 开发服务器端口
+host = "localhost"         # 主机地址
+https = false              # 是否启用HTTPS
+open = true               # 自动打开浏览器
+proxy = {                 # 代理配置
+    "/api" = {
+        target = "http://localhost:3000",  # 后端API地址
+        change_origin = true,
+        rewrite = ["^/api" = ""]
+    }
+}
+cors = true               # 启用CORS
+hmr = true                # 热模块替换
+watch = {                # 文件监听配置
+    ignored = ["**/node_modules/**", "dist/**"],
+    use_polling = false
+}
+
+# TypeScript配置
+[typescript]
+strict = true              # 严格模式
+no_implicit_any = true     # 禁止隐式any
+no_explicit_any = true     # 禁止显式any
+check_js = true           # 检查JS文件
+types = [
+    "@ant-design/icons-vue",
+    "ant-design-vue/typings/global"
+]
+
+# 性能优化配置
+[performance]
+chunk_size_warning = "2MB"  # 包大小警告阈值
+lazy_loading = true         # 启用懒加载
+image_optimization = {
+    quality: 75,            # 图片质量
+    format: ["webp", "avif"]# 优化格式
+}
+tree_shaking = true        # 启用Tree Shaking
+component_library = {
+    import_on_demand = true,  # 按需导入
+    style_on_demand = true   # 样式按需导入
+}
+
+# 安全配置
+[security]
+csp = {
+    default_src = ["'self'"],
+    script_src = ["'self'", "'unsafe-inline'"],
+    style_src = ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+    font_src = ["'self'", "https://fonts.gstatic.com"],
+    img_src = ["'self'", "data:", "https:"]
+} 

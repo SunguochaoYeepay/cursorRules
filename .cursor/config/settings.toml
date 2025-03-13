@@ -1,0 +1,86 @@
+# Cursor Global Configuration
+# 该文件定义了 Cursor IDE 的全局设置和行为
+# 最后更新: 2024-03-21
+
+[meta]
+version = "1.0.0"
+description = "Global cursor settings"
+author = "Team"
+last_updated = "2024-03-21"
+
+# 定义关键路径配置
+[paths]
+# rules目录包含所有项目规则配置
+rules = "rules"
+# templates目录包含代码模板
+templates = "templates"
+# scripts目录包含自动化脚本
+scripts = "scripts"
+
+# 配置验证设置
+[validation]
+# 启用规则验证
+enable_rules_validation = true
+# 启用模板验证
+enable_template_validation = true
+# 保存时自动验证
+validation_on_save = true
+
+# IDE 功能特性配置
+[features]
+# 启用自动格式化
+auto_formatting = true
+# 启用自动导入
+auto_imports = true
+# 启用代码补全
+code_completion = true
+# 启用类型检查
+type_checking = true
+
+# Git hooks 配置
+[hooks]
+# 提交前执行的操作
+pre_commit = [
+    "validate-rules",     # 验证规则配置
+    "validate-templates"  # 验证模板配置
+]
+# 合并后执行的操作
+post_merge = [
+    "update-dependencies"  # 更新依赖
+]
+
+# 编辑器基础设置
+[editor]
+# 缩进大小
+tab_size = 4
+# 使用空格而不是制表符
+insert_spaces = true
+# 删除行尾空格
+trim_trailing_whitespace = true
+# 文件末尾添加空行
+insert_final_newline = true
+
+# 代码片段设置
+[snippets]
+# 启用自定义代码片段
+enable_custom_snippets = true
+# 代码片段存储路径
+snippets_path = "snippets"
+
+# 性能优化设置
+[performance]
+# 启用缓存
+enable_cache = true
+# 缓存过期时间（秒）
+cache_ttl = 3600
+# 启用延迟加载
+enable_lazy_loading = true
+
+# 安全设置
+[security]
+# 启用敏感信息检查
+enable_sensitive_check = true
+# 配置文件加密
+enable_encryption = false
+# 访问控制
+access_control = "user" 

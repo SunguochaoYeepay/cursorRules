@@ -1,0 +1,152 @@
+# Python 后端项目规则配置
+# 该文件定义了 Python 后端项目的开发规范和依赖管理
+# 最后更新: 2024-03-21
+
+[meta]
+version = "1.0.0"
+description = "Python backend configuration"
+
+# Python 基础配置
+[python]
+version = "^3.9"           # Python版本要求
+type_hints = "mandatory"   # 强制类型提示
+style_guide = "pep8"      # 代码风格规范
+doc_style = "google"      # 文档风格
+indent = 4                # 缩进空格数
+
+# 项目依赖配置
+[dependencies]
+fastapi = ">=0.95.0"                              # Web框架
+pydantic = ">=2.0"                                # 数据验证
+uvicorn = {version = ">=0.15.0", extras = ["standard"]} # ASGI服务器
+aiomysql = ">=0.2.0"                              # MySQL异步驱动
+pymysql = ">=1.1.0"                               # MySQL同步驱动（如有需要）
+SQLAlchemy = ">=2.0.0"                            # ORM框架
+
+# 数据库配置
+[database]
+default = "mysql"                                  # 默认数据库类型
+async_drivers = ["aiomysql>=0.2.0"]               # 异步驱动
+sync_drivers = ["pymysql>=1.1.0"]                 # 同步驱动（可选）
+connection = {
+    pool_size = 20,                               # 连接池大小
+    max_overflow = 10,                            # 最大溢出连接数
+    pool_timeout = 30,                            # 连接池超时时间
+    pool_recycle = 1800                           # 连接回收时间
+}
+charset = "utf8mb4"                               # 字符集
+collation = "utf8mb4_unicode_ci"                  # 排序规则
+
+# MySQL特定配置
+[database.mysql]
+migration_tool = "alembic"                        # 数据库迁移工具
+backup_schedule = "daily@01:00"                   # 备份计划
+max_allowed_packet = "64M"                        # 最大允许数据包
+innodb_buffer_pool_size = "1G"                   # InnoDB缓冲池大小
+sql_mode = [                                      # SQL模式设置
+    "STRICT_TRANS_TABLES",
+    "NO_ZERO_IN_DATE",
+    "NO_ZERO_DATE",
+    "ERROR_FOR_DIVISION_BY_ZERO",
+    "NO_ENGINE_SUBSTITUTION"
+]
+
+# 数据库连接配置
+[database.connection_template]
+development = "mysql+aiomysql://user:pass@localhost:3306/dev_db?charset=utf8mb4"
+testing = "mysql+aiomysql://user:pass@localhost:3306/test_db?charset=utf8mb4"
+production = "mysql+aiomysql://{user}:{password}@{host}:{port}/{db_name}?charset=utf8mb4"
+
+# 数据库迁移配置
+[database.migrations]
+directory = "migrations"              # 迁移文件目录
+naming_convention = "%Y%m%d_%H%M%S_" # 迁移文件命名规则
+template_path = "migrations/template.py.mako"  # 迁移模板
+auto_generate = true                 # 自动生成迁移文件
+verify_checksums = true             # 验证迁移文件校验和
+before_migrate = [                  # 迁移前执行
+    "backup_database",
+    "validate_migrations"
+]
+after_migrate = [                   # 迁移后执行
+    "verify_data_integrity",
+    "update_schema_version"
+]
+
+# 依赖冲突检查
+[conflict_check]
+incompatible = [
+    "mysqlclient vs pymysql",                     # MySQL驱动互斥
+    "uvicorn[standard] must in production"        # 生产环境要求
+]
+
+# 依赖同步策略
+[sync_strategy]
+auto_update = ["daily@03:00", "pre-commit"]   # 自动更新时机
+manual_trigger = ["post-merge", "env-change"]  # 手动触发条件
+
+# FastAPI 配置
+[fastapi]
+route_path = "/routes"                        # 路由文件路径
+schema_path = "schemas.py"                    # 模式文件路径
+middleware = ["GzipMiddleware"]               # 中间件配置
+pagination = {
+    format = "offset_limit",                  # 分页格式
+    default_limit = 20                        # 默认分页大小
+}
+
+# 开发服务器配置
+[dev_server]
+port = 3000                                  # 开发服务器端口
+host = "0.0.0.0"                            # 监听所有网络接口
+reload = true                               # 启用热重载
+workers = 1                                 # 开发环境worker数
+log_level = "debug"                         # 日志级别
+cors_origins = ["http://localhost:8080"]    # 允许的CORS来源
+docs_url = "/docs"                         # Swagger文档路径
+redoc_url = "/redoc"                       # ReDoc文档路径
+openapi_url = "/openapi.json"              # OpenAPI文档路径
+root_path = ""                             # API根路径
+proxy_headers = true                       # 信任代理头
+timeout = {
+    keep_alive = 5,                        # keep-alive超时（秒）
+    graceful_shutdown = 10                 # 优雅关闭超时（秒）
+}
+
+# 代码规范
+[code_rules]
+error_handling = {
+    exception_type = "specific",              # 异常类型要求
+    custom_base = "Exception",                # 自定义异常基类
+    logging = "mandatory"                     # 日志记录要求
+}
+system_calls = "forbidden"                    # 系统调用限制
+async_style = "explicit"                      # 异步风格要求
+
+# 测试配置
+[testing]
+framework = "pytest"                          # 测试框架
+coverage_min = 80                            # 最小覆盖率
+fixtures_path = "tests/fixtures"             # 测试数据路径
+async_tests = true                           # 启用异步测试
+
+# 日志配置
+[logging]
+format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"  # 日志格式
+level = {
+    development = "DEBUG",                    # 开发环境日志级别
+    production = "WARNING"                    # 生产环境日志级别
+}
+handlers = ["console", "file"]                # 日志处理器
+
+# 缓存配置
+[cache]
+strategy = "redis"                           # 缓存策略
+ttl = 3600                                  # 缓存时间
+prefix = "app:"                             # 缓存前缀
+
+# 监控配置
+[monitoring]
+enable_prometheus = true                     # 启用Prometheus
+metrics_path = "/metrics"                   # 指标路径
+log_slow_requests = true                    # 记录慢请求 
